@@ -1,21 +1,13 @@
 
 #include <Arduino.h>
+#include "PrintInfo.hpp"
 
 // Connect to the two encoder outputs!
-#define ENCODER_A   14
-#define ENCODER_B   27
-
-// These let us convert ticks-to-RPM
-#define GEARING     20.4  // To be tested
-#define ENCODERMULT 12.0  // To be tested
+#define ENCODER_A   13
+#define ENCODER_B   12
 
 #define a1  26
 #define a2  25
-
-volatile uint32_t lastA = 0;
-volatile bool motordir = 0;
-volatile uint32_t pulseCount = 0;
-float RPM = 0;
 
 // PWM settings
 const int PWMFreq = 5000;    // Frequency of the PWM signal in Hz
@@ -23,8 +15,12 @@ const int PWMResolution = 8; // 8-bit resolution, so duty cycle ranges from 0 to
 const int PWMChannel1 = 0;
 const int PWMChannel2 = 1;
 
+void controlMotorSpeed(int dutyCycle, bool dir);
+
 void IRAM_ATTR interruptA() {
-    motordir = digitalRead(ENCODER_B);
+
+    PrintInfo::pulseCount++;
+    /*motordir = digitalRead(ENCODER_B);
 
     uint32_t currA = micros();
     uint32_t diffA = currA - lastA;
@@ -35,6 +31,10 @@ void IRAM_ATTR interruptA() {
     pulseCount++;
 
     lastA = currA;
+
+    if (pulseCount > 2000) {
+        controlMotorSpeed(0, true);
+    }*/
 }
 
 void setup() {
@@ -58,6 +58,8 @@ void setup() {
     ledcWrite(PWMChannel2, 0); // Set initial duty cycle to 0 (stopped)
 
     delay(100);
+
+    controlMotorSpeed(150, true);
 }
 
 void controlMotorSpeed(int dutyCycle, bool dir) {
@@ -76,55 +78,20 @@ void controlMotorSpeed(int dutyCycle, bool dir) {
     }
 }
 
-void printRPM() {
 
-    Serial.print("Direction: ");
-    if (motordir) {
-        Serial.print("CCW @ ");
-    } else {
-        Serial.print("CW @ ");
-    }
-    Serial.print((int)RPM); Serial.println(" RPM");
-}
 
-void calculateRPM() {
-    static uint32_t lastPulseCount = 0;
-    static uint32_t lastCalcTime = 0;
-
-    uint32_t currentTime = millis();
-    uint32_t deltaTime = currentTime - lastCalcTime;
-
-    if (deltaTime >= 1000) {  // Calculate every 1 second
-        uint32_t deltaPulses = pulseCount - lastPulseCount;
-
-        // Calculate RPM
-        float revs = deltaPulses;
-        revs /= GEARING;                // account for gear ratio
-        revs /= ENCODERMULT;            // account for multiple ticks per rotation
-        revs *= (60000.0 / deltaTime);  // convert to RPM (revolutions per minute)
-
-        RPM = revs;
-
-        // Update for next calculation
-        lastPulseCount = pulseCount;
-        lastCalcTime = currentTime;
-    }
-}
-
+auto lastPrint = millis();
 void loop() {
 
-    for (int i = 0; i < 255; i++) {
-        controlMotorSpeed(i, true);
-        calculateRPM();
-        printRPM();
-        delay(10);
+    if (PrintInfo::pulseCount > 4245) {
+        controlMotorSpeed(0, true);
     }
 
-    for (int i = 0; i < 255; i++) {
-        controlMotorSpeed(i, false);
-        calculateRPM();
-        printRPM();
-        delay(10);
-    }
+    Serial.println(PrintInfo::pulseCount);
 
+
+    if (lastPrint + 50 < millis()) {
+        PrintInfo::printRPM();
+        lastPrint = millis();
+    }
 }
