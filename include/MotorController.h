@@ -6,6 +6,7 @@
 #define MOTORCONTROLLER_H
 
 #include <Arduino.h>
+#include "PID.h"
 
 #define ENCODER_A   13
 #define ENCODER_B   12
@@ -25,7 +26,14 @@ public:
 	const int PWMChannel1 = 0;
 	const int PWMChannel2 = 1;
 
+	static volatile unsigned long int currentPosition;
+	unsigned long int desiredPosition = 0;
+
+	PID pid = PID(1.0, 0.0, 0.0, -255.0, 255.0);
+
 	void controlMotorSpeed(int dutyCycle, bool dir);
+	void SetPosition(unsigned long int position);
+	void updatePosition();
 };
 
 

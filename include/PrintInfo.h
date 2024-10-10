@@ -16,7 +16,6 @@ public:
 
     static float RPM;
     static volatile bool motordir;
-    static volatile uint32_t pulseCount;
     static void printRPM();
     static void calculateRPM();
 };

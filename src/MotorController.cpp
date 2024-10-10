@@ -3,14 +3,15 @@
 //
 
 #include "MotorController.h"
-#include "PrintInfo.h"
 
 void IRAM_ATTR interruptA() {
     auto motordir = digitalRead(ENCODER_B);
-    PrintInfo::pulseCount += motordir * 2 - 1;
+    MotorController::currentPosition += motordir * 2 - 1;
 }
 
 MotorController::MotorController() {
+    currentPosition = UINT_MAX / 2;
+
     pinMode(ENCODER_B, INPUT_PULLUP);
     pinMode(ENCODER_A, INPUT_PULLUP);
     attachInterrupt(digitalPinToInterrupt(ENCODER_A), interruptA, RISING);
@@ -41,5 +42,20 @@ void MotorController::controlMotorSpeed(int dutyCycle, bool dir) {
         // If motor direction is CW
         ledcWrite(PWMChannel1, dutyCycle); // a1 PWM control
         ledcWrite(PWMChannel2, 0);      // a2 LOW
+    }
+}
+
+void MotorController::SetPosition(unsigned long int position) {
+    desiredPosition = position;
+}
+
+void MotorController::updatePosition() {
+    auto out = pid.calculate(desiredPosition, currentPosition);
+    auto outInt = static_cast<int>(out);
+
+    if (out < 0) {
+        controlMotorSpeed(outInt * -1, false);
+    } else {
+        controlMotorSpeed(outInt, true);
     }
 }

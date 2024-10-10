@@ -3,11 +3,10 @@
 //
 
 #include "PrintInfo.h"
-
+#include "MotorController.h"
 
 float PrintInfo::RPM = 0;
 volatile bool PrintInfo::motordir = false;
-volatile uint32_t PrintInfo::pulseCount = 0;
 
 void PrintInfo::printRPM() {
 
@@ -30,7 +29,7 @@ void PrintInfo::calculateRPM() {
     uint32_t deltaTime = currentTime - lastCalcTime;
 
     if (deltaTime >= 1000) {  // Calculate every 1 second
-        uint32_t deltaPulses = pulseCount - lastPulseCount;
+        uint32_t deltaPulses = MotorController::currentPosition - lastPulseCount;
 
         // Calculate RPM
         double revs = deltaPulses;
@@ -41,7 +40,7 @@ void PrintInfo::calculateRPM() {
         RPM = revs;
 
         // Update for next calculation
-        lastPulseCount = pulseCount;
+        lastPulseCount = MotorController::currentPosition;
         lastCalcTime = currentTime;
     }
 }
