@@ -2,7 +2,7 @@
 // Created by Øystein Bringsli.
 //
 
-#include "PrintInfo.hpp"
+#include "PrintInfo.h"
 
 
 float PrintInfo::RPM = 0;

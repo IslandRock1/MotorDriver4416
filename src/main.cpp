@@ -1,6 +1,6 @@
 
 #include <Arduino.h>
-#include "PrintInfo.hpp"
+#include "PrintInfo.h"
 
 // Connect to the two encoder outputs!
 #define ENCODER_A   13
