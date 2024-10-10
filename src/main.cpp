@@ -19,7 +19,7 @@ void controlMotorSpeed(int dutyCycle, bool dir);
 
 void IRAM_ATTR interruptA() {
 
-    PrintInfo::pulseCount++;
+    //PrintInfo::pulseCount++;
     /*motordir = digitalRead(ENCODER_B);
 
     uint32_t currA = micros();
@@ -83,12 +83,11 @@ void controlMotorSpeed(int dutyCycle, bool dir) {
 auto lastPrint = millis();
 void loop() {
 
-    if (PrintInfo::pulseCount > 4245) {
-        controlMotorSpeed(0, true);
-    }
+    // if (PrintInfo::pulseCount > 4245) {
+    //     controlMotorSpeed(0, true);
+    // }
 
-    Serial.println(PrintInfo::pulseCount);
-
+    //Serial.println(PrintInfo::pulseCount);
 
     if (lastPrint + 50 < millis()) {
         PrintInfo::printRPM();

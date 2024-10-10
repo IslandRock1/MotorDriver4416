@@ -11,10 +11,10 @@ class PrintInfo {
 public:
     PrintInfo();
 
-    static const int encoderTicks = 13;
-    constexpr static const double gearing = 30613.0 / 1500.0;
+    static constexpr int encoderTicks = 13;
+    constexpr static double gearing = 30613.0 / 1500.0;
 
-    static int RPM;
+    static float RPM;
     static volatile bool motordir;
     static volatile uint32_t pulseCount;
     static void printRPM();

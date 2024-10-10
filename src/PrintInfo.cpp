@@ -4,25 +4,25 @@
 
 #include "PrintInfo.hpp"
 
-PrintInfo::PrintInfo() {
-    pulseCount = 0;
-    motordir = false;
-}
 
-void printRPM() {
+float PrintInfo::RPM = 0;
+volatile bool PrintInfo::motordir = false;
+volatile uint32_t PrintInfo::pulseCount = 0;
 
-    PrintInfo::calculateRPM();
+void PrintInfo::printRPM() {
+
+    calculateRPM();
 
     Serial.print("Direction: ");
-    if (PrintInfo::motordir) {
+    if (motordir) {
         Serial.print("CW @ ");
     } else {
         Serial.print("CCW @ ");
     }
-    Serial.print((int)PrintInfo::RPM); Serial.println(" RPM");
+    Serial.print(static_cast<int>(RPM)); Serial.println(" RPM");
 }
 
-void calculateRPM() {
+void PrintInfo::calculateRPM() {
     static uint32_t lastPulseCount = 0;
     static uint32_t lastCalcTime = 0;
 
@@ -30,18 +30,18 @@ void calculateRPM() {
     uint32_t deltaTime = currentTime - lastCalcTime;
 
     if (deltaTime >= 1000) {  // Calculate every 1 second
-        uint32_t deltaPulses = PrintInfo::pulseCount - lastPulseCount;
+        uint32_t deltaPulses = pulseCount - lastPulseCount;
 
         // Calculate RPM
-        float revs = deltaPulses;
-        revs /= PrintInfo::gearing;                // account for gear ratio
-        revs /= PrintInfo::encoderTicks;            // account for multiple ticks per rotation
+        double revs = deltaPulses;
+        revs /= gearing;                // account for gear ratio
+        revs /= encoderTicks;            // account for multiple ticks per rotation
         revs *= (60000.0 / deltaTime);  // convert to RPM (revolutions per minute)
 
-        PrintInfo::RPM = revs;
+        RPM = revs;
 
         // Update for next calculation
-        lastPulseCount = PrintInfo::pulseCount;
+        lastPulseCount = pulseCount;
         lastCalcTime = currentTime;
     }
 }
