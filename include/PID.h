@@ -28,6 +28,17 @@ public:
 
 		// Integral term
 		integral += error * deltaTime;
+
+		// if (integral * integralSign < 0) {
+		// 	integral = 0;
+		//
+		// 	if (integralSign == -1) {
+		// 		integralSign = 1;
+		// 	} else {
+		// 		integralSign = -1;
+		// 	}
+		// }
+
 		float Iout = Ki * integral;
 
 		// Derivative term
@@ -54,15 +65,17 @@ public:
 	// Method to reset the PID (useful between control loops)
 	void reset() {
 		integral = 0;
+		integralSign = -1;
 		prevError = 0;
 		lastTime = millis();
 	}
 
 private:
-	float Kp, Ki, Kd;            // PID coefficients
+	float Kp, Ki, Kd;             // PID coefficients
 	float minOutput, maxOutput;   // Output constraints
 	float prevError;              // Previous error for derivative calculation
 	float integral;               // Integral sum
+	float integralSign = -1;
 	unsigned long lastTime;       // Last time in millis() for delta time calculation
 };
 
