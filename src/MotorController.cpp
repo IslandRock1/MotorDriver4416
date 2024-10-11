@@ -50,8 +50,8 @@ void MotorController::SetPosition(unsigned long int position) {
 }
 
 void MotorController::updatePosition() {
-    auto out = pid.calculate(desiredPosition, currentPosition);
-    auto outInt = static_cast<int>(out);
+    const auto out = pid.calculate(desiredPosition, currentPosition);
+    const auto outInt = static_cast<int>(out);
 
     if (out < 0) {
         controlMotorSpeed(outInt * -1, false);
