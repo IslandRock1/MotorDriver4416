@@ -33,6 +33,8 @@ public:
 
 	void controlMotorSpeed(int dutyCycle, bool dir);
 	void SetPosition(unsigned long int position);
+	void incrementPosition(unsigned long int increment);
+	void decrementPosition(unsigned long int decrement);
 	void updatePosition();
 };
 

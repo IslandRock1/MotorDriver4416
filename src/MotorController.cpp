@@ -49,6 +49,14 @@ void MotorController::SetPosition(unsigned long int position) {
     desiredPosition = position;
 }
 
+void MotorController::incrementPosition(unsigned long int increment) {
+    desiredPosition += increment;
+}
+
+void MotorController::decrementPosition(unsigned long int decrement) {
+    desiredPosition -= decrement;
+}
+
 void MotorController::updatePosition() {
     const auto out = pid.calculate(desiredPosition, currentPosition);
     const auto outInt = static_cast<int>(out);
