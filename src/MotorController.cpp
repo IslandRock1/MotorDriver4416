@@ -9,8 +9,8 @@ void IRAM_ATTR interruptA() {
     MotorController::currentPosition += motordir * 2 - 1;
 }
 
+volatile unsigned long int MotorController::currentPosition = 2147483648; // UINT_MAX / 2
 MotorController::MotorController() {
-    currentPosition = UINT_MAX / 2;
 
     pinMode(ENCODER_B, INPUT_PULLUP);
     pinMode(ENCODER_A, INPUT_PULLUP);
@@ -45,15 +45,35 @@ void MotorController::controlMotorSpeed(int dutyCycle, bool dir) {
     }
 }
 
-void MotorController::SetPosition(unsigned long int position) {
+void MotorController::SetPosition(long int position) {
+    desiredPosition = UINT_MAX / 2 + position;
+}
+
+void MotorController::SetPositionAbsolute(unsigned long int position) {
     desiredPosition = position;
 }
 
-void MotorController::incrementPosition(unsigned long int increment) {
+void MotorController::incrementPositionRounds(long int rounds) {
+    desiredPosition += rounds * encoderAndGearing;
+}
+
+void MotorController::decrementPositionRounds(long int rounds) {
+    desiredPosition -= rounds * encoderAndGearing;
+}
+
+void MotorController::incrementPositionRadians(unsigned long int radians) {
+    desiredPosition += radians * encoderAndGearing / TWO_PI;
+}
+
+void MotorController::decrementPositionRadians(unsigned long int radians) {
+    desiredPosition -= radians * encoderAndGearing / TWO_PI;
+}
+
+void MotorController::incrementPositionPulsecount(unsigned long int increment) {
     desiredPosition += increment;
 }
 
-void MotorController::decrementPosition(unsigned long int decrement) {
+void MotorController::decrementPositionPulsecount(unsigned long int decrement) {
     desiredPosition -= decrement;
 }
 

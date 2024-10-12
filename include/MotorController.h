@@ -26,15 +26,27 @@ public:
 	const int PWMChannel1 = 0;
 	const int PWMChannel2 = 1;
 
+	const double encoderAndGearing = 13.0 * 30613.0 / 1500.0;
+
 	static volatile unsigned long int currentPosition;
 	unsigned long int desiredPosition = 0;
 
 	PID pid = PID(1.0, 0.0, 0.0, -255.0, 255.0);
 
 	void controlMotorSpeed(int dutyCycle, bool dir);
-	void SetPosition(unsigned long int position);
-	void incrementPosition(unsigned long int increment);
-	void decrementPosition(unsigned long int decrement);
+
+	void SetPosition(long int position);
+	void SetPositionAbsolute(unsigned long int position);
+
+	void incrementPositionRounds(long int rounds);
+	void decrementPositionRounds(long int rounds);
+
+	void incrementPositionRadians(unsigned long int radians);
+	void decrementPositionRadians(unsigned long int radians);
+
+	void incrementPositionPulsecount(unsigned long int increment);
+	void decrementPositionPulsecount(unsigned long int decrement);
+
 	void updatePosition();
 };
 

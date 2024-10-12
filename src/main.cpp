@@ -9,7 +9,9 @@ void setup() {
     Serial.begin(115200);
     Serial.println("Serial configured.");
 
-    motorController.controlMotorSpeed(255, true);
+
+    Serial.println(sizeof(MotorController::currentPosition));
+    // motorController.controlMotorSpeed(255, true);
 }
 
 auto lastPrint = millis();
