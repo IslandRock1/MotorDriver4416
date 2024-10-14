@@ -9,7 +9,7 @@
 #include "PID.h"
 
 #define ENCODER_A   13
-#define ENCODER_B   12
+#define ENCODER_B   18
 
 #define a1  26
 #define a2  25
@@ -28,12 +28,15 @@ public:
 
 	const double encoderAndGearing = 13.0 * 30613.0 / 1500.0;
 
-	static volatile unsigned long int currentPosition;
-	unsigned long int desiredPosition = 0;
+    static volatile bool motordir;
+	static volatile long long int currentPosition;
+	long long int desiredPosition = INT8_MAX / 2;
 
-	PID pid = PID(1.0, 0.0, 0.0, -255.0, 255.0);
+	PID pid = PID(100.0, 0.0, 0.0, -255.0, 255.0);
 
-	void controlMotorSpeed(int dutyCycle, bool dir);
+    void initInterrupt();
+
+	void controlMotorSpeed(int dutyCycle, bool dir) const;
 
 	void SetPosition(long int position);
 	void SetPositionAbsolute(unsigned long int position);

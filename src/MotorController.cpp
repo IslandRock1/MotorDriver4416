@@ -5,16 +5,17 @@
 #include "MotorController.h"
 
 void IRAM_ATTR interruptA() {
-    auto motordir = digitalRead(ENCODER_B);
-    MotorController::currentPosition += motordir * 2 - 1;
+    MotorController::motordir = digitalRead(ENCODER_B);
+    MotorController::currentPosition -= MotorController::motordir * 2 - 1;
 }
 
-volatile unsigned long int MotorController::currentPosition = 2147483648; // UINT_MAX / 2
+volatile bool MotorController::motordir = false;
+volatile long long int MotorController::currentPosition = INT8_MAX / 2;
 MotorController::MotorController() {
+
 
     pinMode(ENCODER_B, INPUT_PULLUP);
     pinMode(ENCODER_A, INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(ENCODER_A), interruptA, RISING);
 
     // Configure PWM for a1 and a2
     ledcSetup(PWMChannel1, PWMFreq, PWMResolution); // Set up PWM for channel 1
@@ -29,24 +30,28 @@ MotorController::MotorController() {
     ledcWrite(PWMChannel2, 0); // Set initial duty cycle to 0 (stopped)
 }
 
-void MotorController::controlMotorSpeed(int dutyCycle, bool dir) {
+void MotorController::initInterrupt() {
+    attachInterrupt(digitalPinToInterrupt(ENCODER_A), interruptA, RISING);
+}
+
+void MotorController::controlMotorSpeed(int dutyCycle, bool dir) const {
     // Ensure dutyCycle is within the range of 0 to 255
     dutyCycle = constrain(dutyCycle, 0, 255);
 
     // Apply PWM to the appropriate pins for motor control
     if (dir) {
-        // If motor direction is CCW
+        // If motor direction is CW
         ledcWrite(PWMChannel1, 0);      // a1 LOW
         ledcWrite(PWMChannel2, dutyCycle); // a2 PWM control
     } else {
-        // If motor direction is CW
+        // If motor direction is CCW
         ledcWrite(PWMChannel1, dutyCycle); // a1 PWM control
         ledcWrite(PWMChannel2, 0);      // a2 LOW
     }
 }
 
 void MotorController::SetPosition(long int position) {
-    desiredPosition = UINT_MAX / 2 + position;
+    desiredPosition = 2147483648 + position;
 }
 
 void MotorController::SetPositionAbsolute(unsigned long int position) {
@@ -78,12 +83,15 @@ void MotorController::decrementPositionPulsecount(unsigned long int decrement) {
 }
 
 void MotorController::updatePosition() {
-    const auto out = pid.calculate(desiredPosition, currentPosition);
+    // const auto out = pid.calculate(desiredPosition, currentPosition);
+
+    float out = desiredPosition - currentPosition;
+    out *= 1000;
     const auto outInt = static_cast<int>(out);
 
     if (out < 0) {
-        controlMotorSpeed(outInt * -1, false);
+        controlMotorSpeed(outInt * -1, true);
     } else {
-        controlMotorSpeed(outInt, true);
+        controlMotorSpeed(outInt, false);
     }
 }

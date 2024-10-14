@@ -9,14 +9,12 @@
 
 class PrintInfo {
 public:
-    PrintInfo();
 
     static constexpr int encoderTicks = 13;
     constexpr static double gearing = 30613.0 / 1500.0;
 
     static float RPM;
-    static volatile bool motordir;
-    static void printRPM();
+    static void printRPM(unsigned long int desiredPosition);
     static void calculateRPM();
 };
 
