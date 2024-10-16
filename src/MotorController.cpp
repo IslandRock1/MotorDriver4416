@@ -59,19 +59,19 @@ void MotorController::SetPositionAbsolute(unsigned long int position) {
 }
 
 void MotorController::incrementPositionRounds(long int rounds) {
-    desiredPosition += rounds * encoderAndGearing;
+    desiredPosition += rounds * encoderAndGearingForMotor;
 }
 
 void MotorController::decrementPositionRounds(long int rounds) {
-    desiredPosition -= rounds * encoderAndGearing;
+    desiredPosition -= rounds * encoderAndGearingForMotor;
 }
 
 void MotorController::incrementPositionRadians(unsigned long int radians) {
-    desiredPosition += radians * encoderAndGearing / TWO_PI;
+    desiredPosition += radians * encoderAndGearingForMotor / TWO_PI;
 }
 
 void MotorController::decrementPositionRadians(unsigned long int radians) {
-    desiredPosition -= radians * encoderAndGearing / TWO_PI;
+    desiredPosition -= radians * encoderAndGearingForMotor / TWO_PI;
 }
 
 void MotorController::incrementPositionPulsecount(unsigned long int increment) {

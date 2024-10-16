@@ -26,7 +26,7 @@ public:
 	const int PWMChannel1 = 0;
 	const int PWMChannel2 = 1;
 
-	const double encoderAndGearing = 13.0 * 30613.0 / 1500.0;
+	const double encoderAndGearingForMotor = 13.0 * 30613.0 / 1500.0;
 
     static volatile bool motordir;
 	static volatile long long int currentPosition;
