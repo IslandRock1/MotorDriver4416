@@ -26,16 +26,17 @@ void setup() {
     Serial.println("Serial configured.");
 
     motorController.initInterrupt();
+    motorController.incrementPositionRounds(20.0);
+
+    delay(1000);
     initTime = millis();
 }
 
 void loop() {
 
     if (!hasInitialized && (initTime + 5000 < millis())) {
-        Serial.println("Init start position.");
 
         initTime = millis();
-
         motorController.incrementPositionRounds(1.0);
     }
 

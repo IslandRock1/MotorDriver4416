@@ -10,7 +10,7 @@ void IRAM_ATTR interruptA() {
 }
 
 volatile bool MotorController::motordir = false;
-volatile long long int MotorController::currentPosition = INT8_MAX / 2;
+volatile long long int MotorController::currentPosition = INT32_MAX / 2;
 MotorController::MotorController() {
 
 
@@ -83,10 +83,14 @@ void MotorController::decrementPositionPulsecount(unsigned long int decrement) {
 }
 
 void MotorController::updatePosition() {
-    // const auto out = pid.calculate(desiredPosition, currentPosition);
 
-    float out = desiredPosition - currentPosition;
-    out *= 1000;
+    auto out = pid.calculate(desiredPosition, currentPosition);
+
+    // float out = desiredPosition - currentPosition;
+    //out *= 1000;
+
+    // Below 80 motor does not start.
+
     const auto outInt = static_cast<int>(out);
 
     if (out < 0) {

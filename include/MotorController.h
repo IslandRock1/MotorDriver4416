@@ -30,7 +30,7 @@ public:
 
     static volatile bool motordir;
 	static volatile long long int currentPosition;
-	long long int desiredPosition = INT8_MAX / 2;
+	long long int desiredPosition = INT32_MAX / 2;
 
 	PID pid = PID(100.0, 0.0, 0.0, -255.0, 255.0);
 

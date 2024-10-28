@@ -18,10 +18,11 @@ public:
 	float calculate(long long int setpoint, long long int measured_value) {
 		// Get current time (assuming this is running on a platform with millis())
 		unsigned long currentTime = millis();
-		float deltaTime = (currentTime - lastTime) / 1000.0;  // Time in seconds
+		float deltaTime = (currentTime - lastTime);  // Time in ms
+        deltaTime++; // Very often this becomes 0, so i just add 1. Whatever
 
 		// Calculate error
-		auto error = static_cast<float>(setpoint - measured_value);
+		float error = setpoint - measured_value;
 
 		// Proportional term
 		float Pout = Kp * error;
