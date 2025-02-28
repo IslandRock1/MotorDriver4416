@@ -35,18 +35,14 @@ void MotorController::initInterrupt() {
 }
 
 void MotorController::controlMotorSpeed(int dutyCycle, bool dir) const {
-    // Ensure dutyCycle is within the range of 0 to 255
     dutyCycle = constrain(dutyCycle, 0, 255);
 
-    // Apply PWM to the appropriate pins for motor control
     if (dir) {
-        // If motor direction is CW
-        ledcWrite(PWMChannel1, 0);      // a1 LOW
-        ledcWrite(PWMChannel2, dutyCycle); // a2 PWM control
+        ledcWrite(PWMChannel1, 0);
+        ledcWrite(PWMChannel2, dutyCycle);
     } else {
-        // If motor direction is CCW
-        ledcWrite(PWMChannel1, dutyCycle); // a1 PWM control
-        ledcWrite(PWMChannel2, 0);      // a2 LOW
+        ledcWrite(PWMChannel1, dutyCycle);
+        ledcWrite(PWMChannel2, 0);
     }
 }
 
