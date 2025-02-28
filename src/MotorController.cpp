@@ -86,11 +86,6 @@ void MotorController::updatePosition() {
 
     auto out = pid.calculate(desiredPosition, currentPosition);
 
-    // float out = desiredPosition - currentPosition;
-    //out *= 1000;
-
-    // Below 80 motor does not start.
-
     const auto outInt = static_cast<int>(out);
 
     if (out < 0) {
