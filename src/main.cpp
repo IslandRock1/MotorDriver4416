@@ -34,16 +34,19 @@ void setup() {
 
 void loop() {
 
-    if (!hasInitialized && (initTime + 5000 < millis())) {
+    // if (!hasInitialized && (initTime + 5000 < millis())) {
 
-        initTime = millis();
-        motorController.incrementPositionRounds(1.0);
-    }
+    //     initTime = millis();
+    //     motorController.incrementPositionRounds(1.0);
+    // }
 
-    if (lastPrint + 50 < millis()) {
+    if (lastPrint + 500 < millis()) {
         PrintInfo::printRPM(motorController.desiredPosition);
+        PrintInfo::printDriverTime(MotorController::sumTime);
+        MotorController::sumTime = 0;
         lastPrint = millis();
     }
 
-    motorController.updatePosition();
+    // motorController.updatePosition();
+    motorController.controlMotorSpeed(255, false);
 }

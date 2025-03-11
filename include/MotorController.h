@@ -32,6 +32,8 @@ public:
 	static volatile long long int currentPosition;
 	long long int desiredPosition = INT32_MAX / 2;
 
+    static volatile uint32_t sumTime;
+
 	PID pid = PID(100.0, 0.0, 0.0, -255.0, 255.0);
 
     void initInterrupt();
