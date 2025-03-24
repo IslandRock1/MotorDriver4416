@@ -78,15 +78,14 @@ void MotorController::decrementPositionPulsecount(unsigned long int decrement) {
     desiredPosition -= decrement;
 }
 
-void MotorController::updatePosition() {
+void MotorController::updatePosition(bool turnOff) {
 
-    auto out = pid.calculate(desiredPosition, currentPosition);
-
-    const auto outInt = static_cast<int>(out);
-
-    if (out < 0) {
-        controlMotorSpeed(outInt * -1, true);
+    if (turnOff) {
+        controlMotorSpeed(0, true);
     } else {
-        controlMotorSpeed(outInt, false);
+        auto out = pid.calculate(desiredPosition, currentPosition);
+        const auto outInt = static_cast<int>(out);
+
+        controlMotorSpeed(abs(outInt), out < 0);
     }
 }

@@ -50,7 +50,7 @@ public:
 	void incrementPositionPulsecount(unsigned long int increment);
 	void decrementPositionPulsecount(unsigned long int decrement);
 
-	void updatePosition();
+	void updatePosition(bool turnOff);
 };
 
 
