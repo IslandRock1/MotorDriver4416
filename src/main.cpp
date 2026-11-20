@@ -40,8 +40,10 @@ void loop() {
         motorController.incrementPositionRounds(1.0);
     }
 
-    if (lastPrint + 50 < millis()) {
+    if (lastPrint + 500 < millis()) {
         PrintInfo::printRPM(motorController.desiredPosition);
+        // PrintInfo::printDriverTime(MotorController::sumTime);
+        MotorController::sumTime = 0;
         lastPrint = millis();
     }
 

@@ -2,15 +2,24 @@
 // Created by oyste on 10/10/2024.
 //
 
+#include <esp_timer.h>
 #include "MotorController.h"
 
 void IRAM_ATTR interruptA() {
+    uint32_t start = esp_timer_get_time();
+
     MotorController::motordir = digitalRead(ENCODER_B);
     MotorController::currentPosition -= MotorController::motordir * 2 - 1;
+
+    uint32_t end = esp_timer_get_time();
+    uint32_t duration = end - start;
+
+    MotorController::sumTime += duration;
 }
 
 volatile bool MotorController::motordir = false;
 volatile long long int MotorController::currentPosition = INT32_MAX / 2;
+volatile uint32_t MotorController::sumTime = 0;
 MotorController::MotorController() {
 
 

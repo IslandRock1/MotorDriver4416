@@ -12,9 +12,11 @@ public:
 
     static constexpr int encoderTicks = 13;
     constexpr static double gearing = 30613.0 / 1500.0;
+    static uint32_t lastPrint;
 
     static float RPM;
     static void printRPM(unsigned long int desiredPosition);
+    static void printDriverTime(uint32_t sumTime);
     static void calculateRPM();
 };
 
