@@ -38,6 +38,12 @@ public:
 
     void initInterrupt();
 
+	// Atomic-ish read of the 64-bit encoder position (the ISR updates it).
+	long long getPosition() const;
+
+	// Stop the motor immediately.
+	void stopMotor() const;
+
 	void controlMotorSpeed(int dutyCycle, bool dir) const;
 
 	void SetPosition(long int position);

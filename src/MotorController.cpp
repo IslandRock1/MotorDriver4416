@@ -43,6 +43,18 @@ void MotorController::initInterrupt() {
     attachInterrupt(digitalPinToInterrupt(ENCODER_A), interruptA, RISING);
 }
 
+long long MotorController::getPosition() const {
+    noInterrupts();
+    const long long position = currentPosition;
+    interrupts();
+    return position;
+}
+
+void MotorController::stopMotor() const {
+    ledcWrite(PWMChannel1, 0);
+    ledcWrite(PWMChannel2, 0);
+}
+
 void MotorController::controlMotorSpeed(int dutyCycle, bool dir) const {
     dutyCycle = constrain(dutyCycle, 0, 255);
 
